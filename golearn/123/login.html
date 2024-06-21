@@ -1,0 +1,14 @@
+<div>
+  <h1>Login</h1>
+  <form ng-submit="login()">
+    <label for="email">Email:</label>
+    <input type="email" ng-model="user.email" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" ng-model="user.password" required>
+    <br>
+    <button type="submit">Login</button>
+    <p ng-if="error">{{error}}</p>
+  </form>
+  <a href="/register">Register</a>
+</div>
