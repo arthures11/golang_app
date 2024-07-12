@@ -21,9 +21,10 @@ export class HomeComponent implements OnInit {
       error => {
         if (error.status === 401) {
           // Unauthorized, redirect to login
-          localStorage.removeItem('token');
+         // localStorage.removeItem('token');
          // this.router.navigate(['/login']);
         } else {
+          this.router.navigate(['/login']);
           this.error = 'Could not fetch user info';
         }
       }

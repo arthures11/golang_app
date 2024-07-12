@@ -1,0 +1,10 @@
+.app-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  app-sidenav {
+
+    flex: 10%;
+  }
+  

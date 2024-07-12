@@ -8,19 +8,26 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
+import { CarouselComponent } from './carousel/carousel.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { RecaptchaComponent } from './recaptcha/recaptcha.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    CarouselComponent,
+    SidenavComponent,
+    RecaptchaComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    RecaptchaModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

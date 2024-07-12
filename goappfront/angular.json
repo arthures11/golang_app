@@ -68,8 +68,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "goappfront:build",
-            "proxyConfig": "proxy.conf.json"
+            "buildTarget": "goappfront:build"
           },
           "configurations": {
             "production": {

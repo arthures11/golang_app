@@ -44,12 +44,22 @@ func AuthorizeAdmin() gin.HandlerFunc {
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
+		authHeader, err := c.Cookie("token")
+		if err != nil {
+			fmt.Println("cos nie tak", err)
+			//c.Redirect(http.StatusNotFound, "/login")
+			//c.Redirect(http.StatusFound, "/login")
+			c.JSON(http.StatusNotFound, gin.H{"message": "The token is invalid."})
 			c.Abort()
 			return
 		}
+
+		// authHeader := c.GetHeader("Authorization")
+		// if authHeader == "" {
+		// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
+		// 	c.Abort()
+		// 	return
+		// }
 
 		// Check Bearer token
 		tokenString := strings.Replace(authHeader, "Bearer ", "", 1)
@@ -60,13 +70,17 @@ func AuthMiddleware() gin.HandlerFunc {
 		})
 
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			//fmt.Println("cos nie tak2", err)
+			//c.Redirect(http.StatusNotFound, "/login")
+			c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
 			c.Abort()
 			return
 		}
 
 		if !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			fmt.Println("cos nie tak3", err)
+			//c.Redirect(http.StatusNotFound, "/login")
+			c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
 			c.Abort()
 			return
 		}
@@ -79,9 +93,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		// Set user context for downstream handlers
-		fmt.Println("smth")
 		c.Set("userId", claims.UserId)
-
+		c.Set("tkn", tokenString)
 		c.Next()
 	}
 }
