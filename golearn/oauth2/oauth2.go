@@ -57,7 +57,8 @@ func HandleGoogleCallback(c *gin.Context) {
 	c.Set(emailContextKey, oauthResponse.Email)
 	controllers.Login(c)
 	token, _ := c.Get("bearer")
-	expirationTime := time.Now().Add(10 * time.Second)
+	//expirationTime := time.Now().Add(10 * time.Second)
+	expirationTime := time.Now().Add(10 * 24 * time.Hour)
 	// Set access token in a cookie
 	cookie := http.Cookie{
 		Name:     "token",

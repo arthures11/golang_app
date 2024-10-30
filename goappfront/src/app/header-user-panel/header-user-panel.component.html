@@ -1,0 +1,89 @@
+<div class="navbar bg-base-100">
+    <div class="navbar-start">
+<!--      <div class="dropdown">-->
+<!--        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">-->
+<!--          <svg-->
+<!--            xmlns="http://www.w3.org/2000/svg"-->
+<!--            class="h-5 w-5"-->
+<!--            fill="none"-->
+<!--            viewBox="0 0 24 24"-->
+<!--            stroke="currentColor">-->
+<!--            <path-->
+<!--              stroke-linecap="round"-->
+<!--              stroke-linejoin="round"-->
+<!--              stroke-width="2"-->
+<!--              d="M4 6h16M4 12h8m-8 6h16" />-->
+<!--          </svg>-->
+<!--        </div>-->
+<!--        <ul-->
+<!--          tabindex="0"-->
+<!--          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">-->
+<!--          <li><a>Item 1</a></li>-->
+<!--          <li>-->
+<!--            <a>Parent</a>-->
+<!--            <ul class="p-2">-->
+<!--              <li><a>Submenu 1</a></li>-->
+<!--              <li><a>Submenu 2</a></li>-->
+<!--            </ul>-->
+<!--          </li>-->
+<!--          <li><a>Item 3</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+      <a class="btn btn-ghost text-xl">luckytap</a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1 z-10">
+
+
+        <li>
+          <a class="glass" (click)="openWalletMenu()">Deposit</a>
+        </li>
+
+        <!-- Add this at the bottom of your panel.component.html -->
+        <div class="wallet-dialog-overlay" *ngIf="isWalletMenuOpen" (click)="closeWalletMenu($event)">
+          <app-wallet-menu
+            (click)="$event.stopPropagation()"
+            [isOpen]="isWalletMenuOpen"
+            (close)="closeWalletMenu($event)">
+          </app-wallet-menu>
+        </div>
+
+
+      </ul>
+    </div>
+    <div class="navbar-end">
+
+    <div>
+        <button class="btn">
+            BALANCE:
+            <div class="badge badge-neutral">17.33</div>
+          </button>
+
+
+    </div>
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle flex items-center space-x-1">
+        <div class="w-6">
+          <img alt="Avatar" src="https://freesvg.org/img/Male-Avatar.png" />
+        </div>
+        <svg width="2px" height="2px" class="h-2 w-2 fill-current opacity-60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048">
+          <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+        </svg>
+      </div>
+
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+<!--        <li>-->
+<!--          <a class="justify-between">-->
+<!--            Profile-->
+<!--&lt;!&ndash;            <span class="badge">New</span>&ndash;&gt;-->
+<!--          </a>-->
+<!--        </li>-->
+        <li><label for="my_modal_3" class="btn">Profile</label></li>
+        <li><label for="settings_modal" class="btn">Settings</label></li>
+        <li  class="ml-auto"><a>Logout</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>

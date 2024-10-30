@@ -3,3 +3,10 @@
     <h1>Hello {{username}}</h1>
     <p *ngIf="error">{{error}}</p>
   </div>
+
+  <div>
+    <h2>Generate QR Code Example</h2>
+    <input type="text" [(ngModel)]="qrCodeText" placeholder="Enter text">
+    <br><br>
+    <qrcode [qrdata]="qrCodeText" [width]="512" [imageHeight]="512"></qrcode>
+  </div>

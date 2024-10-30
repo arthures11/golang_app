@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  qrCodeText = "otpauth://totp/margattita.it:specuuuuu%40gmail.com?secret=AAAAAAAAAAAAAAAA&issuer=Arthur&algorithm=SHA1&digits=6&period=30"; 
   username: string = '';
   error: string = '';
 

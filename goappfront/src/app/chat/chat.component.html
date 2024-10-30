@@ -1,0 +1,12 @@
+<div #chatContainer class="bg-base-300 text-white p-4 rounded-lg shadow-lg h-auto max-h-[45vh] overflow-y-auto text-xs">
+  <div *ngFor="let message of messages" class="mb-0.5">
+    <span class="text-gray-400 text-[0.6rem] mr-2 tooltip" data-tip="15 Jul">{{message.time}}</span>
+    <span class="text-yellow-300 font-semibold mr-2 text-xs">{{message.username}}:</span>
+    <span class="text-xs">{{message.text}}</span>
+  </div>
+  <input
+    type="text"
+    placeholder="your message..."
+    class="input input-bordered input-primary w-full h-auto text-xs"
+  />
+</div>

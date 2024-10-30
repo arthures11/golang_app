@@ -1,0 +1,133 @@
+
+<div class="wallet-dialog">
+  <button class="close-button" (click)="closeMenu()">&times;</button>
+  <!-- Navigation Tabs -->
+  <nav class="tabs">
+    <button
+      [class.active]="activeTab === 'deposit'"
+      (click)="activeTab = 'deposit'">
+      Deposit
+    </button>
+    <button
+      [class.active]="activeTab === 'withdrawal'"
+      (click)="activeTab = 'withdrawal'">
+      Withdrawal
+    </button>
+  </nav>
+
+  <!-- Deposit Section -->
+  <div *ngIf="activeTab === 'deposit'" class="content">
+    <div class="info-box">
+      <h3>XRP Deposit Information</h3>
+      <p class="warning">⚠️ Only XRP (Ripple) deposits are accepted</p>
+
+      <div class="address-info">
+        <div class="qr-code">
+          <!-- Placeholder for QR code - you'll need to implement QR generation -->
+          <div class="qr-placeholder"></div>
+        </div>
+
+        <div class="details">
+          <div class="field">
+            <label>Address:</label>
+            <div class="copy-field">
+              <input [value]="xrpAddress" readonly />
+              <button (click)="copyToClipboard(xrpAddress)">Copy</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Destination Tag:</label>
+            <div class="copy-field">
+              <input [value]="destinationTag" readonly />
+              <button (click)="copyToClipboard(destinationTag)">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deposit History Table -->
+    <div class="history-table">
+      <h3>Deposit History</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Transaction ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let deposit of depositHistory | slice:(currentPage-1)*pageSize:currentPage*pageSize">
+          <td>{{deposit.date | date:'short'}}</td>
+          <td>{{deposit.amount}} XRP</td>
+          <td>
+              <span [class]="'status-' + deposit.status">
+                {{deposit.status}}
+              </span>
+          </td>
+          <td class="txid">{{deposit.txId}}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button
+          [disabled]="currentPage === 1"
+          (click)="currentPage = currentPage - 1">
+          Previous
+        </button>
+        <span>Page {{currentPage}} of {{totalPages}}</span>
+        <button
+          [disabled]="currentPage === totalPages"
+          (click)="currentPage = currentPage + 1">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Withdrawal Section -->
+  <div *ngIf="activeTab === 'withdrawal'" class="content">
+    <div class="withdrawal-form">
+      <h3>XRP Withdrawal</h3>
+      <p class="warning">⚠️ Please double-check all details before confirming</p>
+
+      <div class="field">
+        <label>XRP Address:</label>
+        <input
+          [(ngModel)]="withdrawalAddress"
+          placeholder="Enter XRP address"
+          class="full-width" />
+      </div>
+
+      <div class="field">
+        <label>Destination Tag:</label>
+        <input
+          [(ngModel)]="withdrawalTag"
+          placeholder="Enter destination tag"
+          type="number"
+          class="full-width" />
+      </div>
+
+      <div class="field">
+        <label>Amount (XRP):</label>
+        <input
+          [(ngModel)]="withdrawalAmount"
+          placeholder="Enter amount"
+          type="number"
+          class="full-width" />
+      </div>
+
+      <button
+        class="confirm-btn"
+        [disabled]="!isWithdrawalValid()"
+        (click)="confirmWithdrawal()">
+        Confirm Withdrawal
+      </button>
+    </div>
+  </div>
+</div>

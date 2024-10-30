@@ -10,7 +10,6 @@ import (
 	"bryja.com/app/models"
 	"bryja.com/app/oauth2"
 	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/pquerna/otp/totp"
 	//	"github.com/gin-gonic/contrib/static"
@@ -47,21 +46,22 @@ func main() {
 	database.InitDatabase()
 	r.Use(cors.Default())
 
-	r.POST("/register", controllers.Register)
-	r.POST("/login", controllers.Login)
+	r.POST("/api/register", controllers.Register)
+	r.POST("/api/login", controllers.Login)
 	r.GET("/api/user", middleware.AuthMiddleware(), controllers.GetCurrentUser)
 	r.GET("/api/edit", middleware.AuthMiddleware(), controllers.EditUser)
 
 	r.GET("/auth/google/login", oauth2.HandleGoogleLogin)
 	r.GET("/auth/google/callback", oauth2.HandleGoogleCallback)
+	//r.GET("/home", middleware.AuthMiddleware())
 
-	r.POST("/setup-2fa", middleware.AuthMiddleware(), controllers.SetupGoogleAuthenticator)
-	r.POST("/verify-2fa", middleware.AuthMiddleware(), verify2FA)
+	r.POST("/api/setup-2fa", middleware.AuthMiddleware(), controllers.SetupGoogleAuthenticator)
+	r.POST("/api/verify-2fa", middleware.AuthMiddleware(), verify2FA)
 
-	r.Use(static.Serve("/", static.LocalFile("./app/webroot/", true)))
+	// r.Use(static.Serve("/", static.LocalFile("./app/webroot/", true)))
 
-	r.NoRoute(func(c *gin.Context) {
-		c.File("./app/webroot/index.html")
-	})
+	// r.NoRoute(func(c *gin.Context) {
+	// 	c.File("./app/webroot/index.html")
+	// })
 	r.Run(":8080")
 }

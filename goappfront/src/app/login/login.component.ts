@@ -54,7 +54,7 @@ export class LoginComponent{
   }
 
   setup2FA() {
-    this.http.post('/setup-2fa', {  }).subscribe(
+    this.http.post('/api/setup-2fa', {  }).subscribe(
       (response: any) => {
         console.log('2FA setup successful', response);
         this.qrCode = response.qr;

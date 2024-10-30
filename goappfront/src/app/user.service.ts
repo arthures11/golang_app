@@ -18,12 +18,12 @@ export class UserService {
   // }
 
   login(email: string, password: string, grecaptcha: string, twoFACode: string): Observable<any> {
-    console.log('Login URL:', '/login');
-    return this.http.post('/login', { email, password, grecaptcha, twoFACode });
+    console.log('Login URL:', '/api/login');
+    return this.http.post('/api/login', { email, password, grecaptcha, twoFACode });
   }
 
   register(email: string, password: string, name: string): Observable<any> {
-    return this.http.post('/register', { email, password, name });
+    return this.http.post('/api/register', { email, password, name });
   }
 
   // getUserInfo(): Observable<any> {

@@ -40,7 +40,7 @@ func (s *LimiterStore) GetLimiter(ip string) *rate.Limiter {
 		return limiter.limiter
 	}
 
-	limiter := rate.NewLimiter(10, 20) //
+	limiter := rate.NewLimiter(100, 100) //
 	s.store[ip] = &Limiter{
 		limiter:  limiter,
 		lastSeen: time.Now(),

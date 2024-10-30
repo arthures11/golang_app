@@ -185,7 +185,7 @@ func SetupGoogleAuthenticator(c *gin.Context) {
 		c.JSON(500, gin.H{"error": "Failed to generate TOTP key"})
 		return
 	}
-
+	fmt.Println(key.URL())
 	user.Secret_totp_key = key.Secret()
 	database.DB.Save(&user)
 
@@ -215,7 +215,9 @@ func Login(c *gin.Context) {
 				return
 			}
 		}
-		expirationTime := time.Now().Add(10 * time.Second)
+
+		//expirationTime := time.Now().Add(10 * time.Second)
+		expirationTime := time.Now().Add(10 * 24 * time.Hour)
 		claims := &models.Claims{
 			UserId: uint64(dbUser.ID),
 			StandardClaims: jwt.StandardClaims{
@@ -224,13 +226,19 @@ func Login(c *gin.Context) {
 				Issuer:    "arthur",
 			},
 		}
-
+		c.Set("userId", dbUser.ID)
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		tok, err := token.SignedString([]byte("12345"))
+		tok, err := token.SignedString([]byte("6966008d70cd5d142c2094db5bd4ad1f70dfaa9dc4147fa0a26a3b450e78323355d95751d9e929924f21afbc1eb69495db7befecb904ae2a31118d02569e2caa08a143b3e176bd98c3d3ccaf4e8090aae51dab8643be8f4dab31fd03b90c20fc7effe6cb0acc581c05ae71c49c48b50ede4b31fe7a53ffce61a5dd803f2a4aaba9e6d96f08cbdeaabb4d1b013f2702192298bee3a0c39c052e06ec8b4921bcec7494da5628cd394a767e6409dfd50640008756de1ad27c12d3c65329d62818023abfa8e5ab2ada552db86839ab69b8a86c15affac9c139e6498035e9871428cfa4c527a44f36c507684b5a75339b746012ae16d62cc324bbaf4dd427addd2fef"))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 			return
 		}
+		// tok, err = middleware.Encrypt(tok)
+		// if err != nil {
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt token"})
+		// 	return
+		// }
+
 		c.Set("bearer", tok)
 
 	} else {
@@ -256,15 +264,15 @@ func Login(c *gin.Context) {
 
 		secretKey := dbUser.Secret_totp_key
 
-		
 		valid := totp.Validate(loginReq.TOTP, secretKey)
 		if valid {
-			fmt.Println("okej")
+			fmt.Println("okej 2fa")
 		} else {
 			fmt.Println("Invalid 2FA code")
 		}
 
-		expirationTime := time.Now().Add(10 * time.Second)
+		//expirationTime := time.Now().Add(10 * time.Second)
+		expirationTime := time.Now().Add(10 * 24 * time.Hour)
 		claims := &models.Claims{
 			UserId: uint64(dbUser.ID),
 			StandardClaims: jwt.StandardClaims{
@@ -274,12 +282,17 @@ func Login(c *gin.Context) {
 			},
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		tokenString, err := token.SignedString([]byte("12345"))
+		tokenString, err := token.SignedString([]byte("6966008d70cd5d142c2094db5bd4ad1f70dfaa9dc4147fa0a26a3b450e78323355d95751d9e929924f21afbc1eb69495db7befecb904ae2a31118d02569e2caa08a143b3e176bd98c3d3ccaf4e8090aae51dab8643be8f4dab31fd03b90c20fc7effe6cb0acc581c05ae71c49c48b50ede4b31fe7a53ffce61a5dd803f2a4aaba9e6d96f08cbdeaabb4d1b013f2702192298bee3a0c39c052e06ec8b4921bcec7494da5628cd394a767e6409dfd50640008756de1ad27c12d3c65329d62818023abfa8e5ab2ada552db86839ab69b8a86c15affac9c139e6498035e9871428cfa4c527a44f36c507684b5a75339b746012ae16d62cc324bbaf4dd427addd2fef"))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 			return
 		}
-
+		// tokenString, err = middleware.Encrypt(tokenString)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt token"})
+		// 	return
+		// }
 		cookie := http.Cookie{
 			Name:     "token",
 			Value:    tokenString,
