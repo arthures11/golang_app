@@ -1,84 +1,76 @@
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {BetService} from "../bet.service";
 
-interface DepositHistory {
-  date: Date;
-  amount: number;
-  status: 'pending' | 'completed';
-  txId: string;
-}
+
+
 
 @Component({
   selector: 'app-wallet-menu',
-  templateUrl: './wallet-menu.component.html',
-  styleUrls: ['./wallet-menu.component.scss']
+  templateUrl: './wallet-menu.component.html', // We'll move the template to a separate file
+  styleUrls: ['./wallet-menu.component.css'] // We'll move the styles to a separate file
 })
 
 export class WalletMenuComponent {
+  @Output() close = new EventEmitter<void>(); // Event emitter to signal closing
 
-  @Input() isOpen = false;
-  @Output() close = new EventEmitter<void>();
-  activeTab: 'deposit' | 'withdrawal' = 'deposit';
+  constructor(private betService: BetService) {}
 
-  // Deposit data
-  xrpAddress = 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh';
-  destinationTag = '12345678';
+  activeTab: 'deposit' | 'withdraw' = 'deposit';
+  depositAddress: string = 'Your XRP Address';
+  destinationId: string = 'Your Destination ID';
+  withdrawAddress: string = '';
+  withdrawDestinationId: string = '';
 
-  // Pagination
-  currentPage = 1;
-  pageSize = 5;
-
-  // Withdrawal form
-  withdrawalAddress = '';
-  withdrawalTag = '';
-  withdrawalAmount = 0;
-
-  // Sample deposit history
-  depositHistory: DepositHistory[] = [
-    {
-      date: new Date('2024-03-01'),
-      amount: 100,
-      status: 'completed',
-      txId: '0x123...abc'
-    },
-    // Add more sample data as needed
+  deposits = [
+    { date: '2024-10-01', amount: '100 XRP', status: 'Completed' },
+    { date: '2024-10-02', amount: '150 XRP', status: 'Completed' },
+    { date: '2024-10-03', amount: '200 XRP', status: 'Pending' },
+    { date: '2024-10-04', amount: '250 XRP', status: 'Completed' },
+    { date: '2024-10-05', amount: '300 XRP', status: 'Failed' },
+    { date: '2024-10-06', amount: '350 XRP', status: 'Completed' },
   ];
 
-  get totalPages(): number {
-    return Math.ceil(this.depositHistory.length / this.pageSize);
+  currentPage: number = 1;
+  totalPages: number = Math.ceil(this.deposits.length / 5);
+  qrCodeUrl: string = 'https://api.qrserver.com/v1/create-qr-code/?data=YourXRPAddress'; // Replace with dynamic QR code URL
+
+  selectTab(tab: 'deposit' | 'withdraw') {
+    this.activeTab = tab;
   }
 
-  ngOnInit() {
-    // Initialize component
-  }
-
-  copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text);
-    // You might want to add a toast notification here
-  }
-
-  isWithdrawalValid(): boolean {
-    return (
-      this.withdrawalAddress.length > 0 &&
-      this.withdrawalTag.length > 0 &&
-      this.withdrawalAmount > 0
-    );
-  }
-
-  confirmWithdrawal() {
-    if (this.isWithdrawalValid()) {
-      // Implement withdrawal logic here
-      console.log('Withdrawal confirmed', {
-        address: this.withdrawalAddress,
-        tag: this.withdrawalTag,
-        amount: this.withdrawalAmount
-      });
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
     }
   }
 
-  closeMenu() {
-    this.close.emit();
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  confirmWithdrawal() {
+    // Logic to handle withdrawal confirmation
+    console.log(`Withdrawing to ${this.withdrawAddress} with ID ${this.withdrawDestinationId}`);
+    // Reset fields after withdrawal
+    this.withdrawAddress = '';
+    this.withdrawDestinationId = '';
+  }
+
+  closeDialog() {
+    this.close.emit(); // Emit close event
+  }
+
+  showFullDepositHistory(user912398123912: string) {
+    this.betService.showFullDepositHistory(user912398123912)
+
+  }
+
+  showFullWithdrawalHistory(user912398123912: string) {
+
+    this.betService.showFullWithdrawalHistory(user912398123912)
+
   }
 }

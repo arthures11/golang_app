@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { initFlowbite } from 'flowbite';
+import {BehaviorSubject} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -8,12 +9,20 @@ import { initFlowbite } from 'flowbite';
 })
 export class AppComponent {
   title = 'goappfront';
-
-  
-
-  ngOnInit(): void {
+  constructor() {}
+  ngOnInit():void  {
     initFlowbite();
+    document.documentElement.classList.toggle(
+      'dark',
+      localStorage['theme'] === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    );
   }
+
+
+
+
+
 }
 
 

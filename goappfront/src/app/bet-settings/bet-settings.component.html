@@ -1,5 +1,5 @@
 <form class="max-w-xs mx-auto text-center">
-    <label id="helper-text-explanation" class="text-xs text-white-300 dark:text-gray-200">YOUR WAGER</label>
+    <label id="helper-text-explanation" class="text-xs text-white-300 dark:text-gray-200 select-none">YOUR WAGER</label>
 
     <div class="relative flex items-center justify-center max-w-[8rem] mx-auto">
         <button type="button" id="decrement-button" (click)="decrement()" class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
@@ -15,3 +15,14 @@
         </button>
     </div>
 </form>
+<div class="flex flex-wrap w-full">
+
+
+
+
+<!--        <p class="w-1/2">Max profit: <span class="font-bold">123</span></p>-->
+<!--        <p class="w-1/2 text-right">Max bet limit: <span class="font-bold">333</span></p>-->
+        <p class="text-center">Win up to: <span class="font-bold">{{ potentialWin }}</span></p>
+
+
+</div>

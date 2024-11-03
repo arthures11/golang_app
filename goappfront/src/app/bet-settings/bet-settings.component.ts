@@ -15,6 +15,7 @@ export class BetSettingsComponent {
   minAmount: number = 0.01;
   maxAmount: number = 50.00;
   public step: number = 0.01;
+  potentialWin: string = '6,666.00';
 
   increment() {
     if(this.betAmount>=1 && this.betAmount<5){
@@ -39,6 +40,9 @@ export class BetSettingsComponent {
     else{
       this.betAmount = 50.00
     }
+
+    this.potentialWin = this.formatNumberString((this.betAmount * 6666.00).toFixed(2));
+
   }
 
   decrement() {
@@ -75,28 +79,87 @@ export class BetSettingsComponent {
     else{
       this.betAmount = 0.01
     }
+    this.potentialWin = this.formatNumberString((this.betAmount * 6666.00).toFixed(2));
+
   }
 
   onInputChange(event: Event) {
-    
     const input = event.target as HTMLInputElement;
-    let value = parseFloat(input.value);
+    let inputValue = input.value;
 
+    // Remove any dots after the first one
+    const dotIndex = inputValue.indexOf('.');
+    if (dotIndex !== -1) {
+      const beforeDot = inputValue.substring(0, dotIndex);
+      const afterDot = inputValue.substring(dotIndex + 1).replace(/\./g, '');
+      // Limit decimal places to 2
+      const limitedAfterDot = afterDot.substring(0, 2);
+      inputValue = beforeDot + '.' + limitedAfterDot;
+      input.value = inputValue;
+    }
+
+    // Handle empty input
+    if (inputValue === '') {
+      this.betAmount = 0;
+      return;
+    }
+
+    // Handle single dot input
+    if (inputValue === '.') {
+      this.betAmount = 0;
+      input.value = '0.';
+      return;
+    }
+
+    // Handle inputs starting with dot
+    if (inputValue.startsWith('.')) {
+      inputValue = `0${inputValue}`;
+      input.value = inputValue;
+    }
+
+    // Allow single leading zero for decimal numbers
+    if (inputValue === '0') {
+      this.betAmount = 0;
+      return;
+    }
+
+    // If still typing decimals or starting with 0, don't format yet
+    if (inputValue.endsWith('.') ||
+      (inputValue.startsWith('0') && inputValue.includes('.') && !isNaN(parseFloat(inputValue)) && inputValue.length <= 4)) {
+      this.betAmount = parseFloat(inputValue) || 0;
+      this.potentialWin = this.formatNumberString((this.betAmount * 6666.00).toFixed(2));
+      return;
+    }
+
+    let value = parseFloat(inputValue);
 
     if (isNaN(value)) {
       this.betAmount = this.minAmount;
+      input.value = this.minAmount.toString();
     } else {
       value = this.roundToTwo(value);
-      if (value < this.minAmount) {
+
+      // Only apply min amount check if we're not in the middle of typing a valid decimal
+      const isTypingDecimal = inputValue.includes('.') || inputValue === '0';
+      if (!isTypingDecimal && value < this.minAmount) {
         value = this.minAmount;
       } else if (value > this.maxAmount) {
         value = this.maxAmount;
       }
+
       this.betAmount = value;
+      input.value = value.toString();
+      this.potentialWin = this.formatNumberString((this.betAmount * 6666.00).toFixed(2));
     }
   }
 
   roundToTwo(num: number): number {
     return Math.round(num * 100) / 100;
   }
+
+  formatNumberString = (str: string): string => {
+    const [integerPart, decimalPart] = str.split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return decimalPart ? `${formattedInteger}.${decimalPart.padEnd(2, '0')}` : `${formattedInteger}.00`;
+  };
 }

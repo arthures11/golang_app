@@ -1,133 +1,188 @@
+<dialog id="wallet_modal" class="modal">
 
-<div class="wallet-dialog">
-  <button class="close-button" (click)="closeMenu()">&times;</button>
-  <!-- Navigation Tabs -->
-  <nav class="tabs">
-    <button
-      [class.active]="activeTab === 'deposit'"
-      (click)="activeTab = 'deposit'">
-      Deposit
-    </button>
-    <button
-      [class.active]="activeTab === 'withdrawal'"
-      (click)="activeTab = 'withdrawal'">
-      Withdrawal
-    </button>
-  </nav>
+  <div class="modal-box max-w-md p-0 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+  <form method="dialog">
+    <button class="btn btn-sm btn-circle btn-ghost absolute right-0 top-0">✕</button>
+  </form>
+  <div class="bg-gray-800 rounded-lg shadow-lg p-6 max-w-md w-full h-800  " (click)="$event.stopPropagation()">
 
-  <!-- Deposit Section -->
-  <div *ngIf="activeTab === 'deposit'" class="content">
-    <div class="info-box">
-      <h3>XRP Deposit Information</h3>
-      <p class="warning">⚠️ Only XRP (Ripple) deposits are accepted</p>
+    <div role="tablist" class="tabs tabs-boxed">
+      <a role="tab"
+         (click)="selectTab('deposit')"
+         class="tab"
+         [ngClass]="{'tab-active': activeTab === 'deposit'}">Deposit</a>
 
-      <div class="address-info">
-        <div class="qr-code">
-          <!-- Placeholder for QR code - you'll need to implement QR generation -->
-          <div class="qr-placeholder"></div>
+      <a role="tab"
+         (click)="selectTab('withdraw')"
+         class="tab"
+         [ngClass]="{'tab-active': activeTab === 'withdraw'}">Withdrawal</a>
+    </div>
+
+    <!-- Container for content with fixed height and scrolling -->
+    <div class="h-1/2">
+      <div *ngIf="activeTab === 'deposit'" class="text-white">
+        <div class="mt-2">
+          <label class="block mb-1">Address:</label>
+          <input type="text" [(ngModel)]="depositAddress" class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white" readonly />
+        </div>
+        <div class="mt-2">
+          <label class="block mb-1">Destination ID:</label>
+          <input type="text" [(ngModel)]="destinationId" class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white" readonly />
         </div>
 
-        <div class="details">
-          <div class="field">
-            <label>Address:</label>
-            <div class="copy-field">
-              <input [value]="xrpAddress" readonly />
-              <button (click)="copyToClipboard(xrpAddress)">Copy</button>
-            </div>
-          </div>
+        <div class="badge badge-success gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-4 w-4 stroke-current">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          Only XRP (Ripple) deposits are accepted
+        </div>
 
-          <div class="field">
-            <label>Destination Tag:</label>
-            <div class="copy-field">
-              <input [value]="destinationTag" readonly />
-              <button (click)="copyToClipboard(destinationTag)">Copy</button>
-            </div>
+        <div role="alert" class="alert mt-5" >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="h-6 w-6 shrink-0 stroke-current">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Your XRP will be converted as 1XRP = 100TAPS.</span>
+        </div>
+        <div role="alert" class="alert mt-2" >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="h-6 w-6 shrink-0 stroke-current">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Min. deposit is 0.01XRP.</span>
+        </div>
+
+        <div class="mt-4">
+          <div class="flex justify-between">
+            <h3 class="font-semibold text-lg">Deposit history</h3>
+            <label class="badge badge-info gap-2 cursor-pointer hover:badge-primary mt-auto"
+                   (click)="showFullDepositHistory('user=912398123912')">
+              <i class="fas fa-history text-xs"></i>
+              full history
+            </label>
           </div>
+          <table class="min-w-full mt-2 bg-gray-700">
+            <thead>
+            <tr>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Date</th>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Amount</th>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let deposit of deposits.slice((currentPage - 1) * 5, currentPage * 5)">
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.date }}</td>
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.amount }}</td>
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.status }}</td>
+            </tr>
+            </tbody>
+          </table>
+
         </div>
       </div>
+
+      <div *ngIf="activeTab === 'withdraw'" class="mt-4 text-white">
+        <div class="mt-2">
+          <label class="block mb-1">Withdrawal Address:</label>
+          <input type="text" [(ngModel)]="withdrawAddress" class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white" />
+        </div>
+        <div class="mt-2">
+          <label class="block mb-1">Destination ID:</label>
+          <input type="text" [(ngModel)]="withdrawDestinationId" class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white" />
+        </div>
+
+        <div role="alert" class="alert mt-10">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="h-6 w-6 shrink-0 stroke-current">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Your TAPS will be converted as 100TAPS = 1XRP.</span>
+
+        </div>
+
+        <div class="flex flex-col items-center mt-10">
+          <button (click)="confirmWithdrawal()" class="btn btn-circle btn-outline flex justify-center items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <span class="mt-2 text-white text-center">Click to confirm</span>
+        </div>
+
+
+
+
+        <div class="mt-4">
+          <div class="flex justify-between">
+            <h3 class="font-semibold text-lg">Withdrawal history</h3>
+            <label class="badge badge-info gap-2 cursor-pointer hover:badge-primary mt-auto"
+                   (click)="showFullWithdrawalHistory('user=912398123912')">
+              <i class="fas fa-history text-xs"></i>
+              full history
+            </label>
+          </div>
+          <table class="min-w-full mt-2 bg-gray-700">
+            <thead>
+            <tr>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Date</th>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Amount</th>
+              <th class="border-b border-gray-600 px-4 py-2 text-left text-gray-300">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let deposit of deposits.slice((currentPage - 1) * 5, currentPage * 5)">
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.date }}</td>
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.amount }}</td>
+              <td class="border-b border-gray-600 px-4 py-2">{{ deposit.status }}</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+
+
+
     </div>
 
-    <!-- Deposit History Table -->
-    <div class="history-table">
-      <h3>Deposit History</h3>
-      <table>
-        <thead>
-        <tr>
-          <th>Date</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Transaction ID</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let deposit of depositHistory | slice:(currentPage-1)*pageSize:currentPage*pageSize">
-          <td>{{deposit.date | date:'short'}}</td>
-          <td>{{deposit.amount}} XRP</td>
-          <td>
-              <span [class]="'status-' + deposit.status">
-                {{deposit.status}}
-              </span>
-          </td>
-          <td class="txid">{{deposit.txId}}</td>
-        </tr>
-        </tbody>
-      </table>
-
-      <!-- Pagination -->
-      <div class="pagination">
-        <button
-          [disabled]="currentPage === 1"
-          (click)="currentPage = currentPage - 1">
-          Previous
-        </button>
-        <span>Page {{currentPage}} of {{totalPages}}</span>
-        <button
-          [disabled]="currentPage === totalPages"
-          (click)="currentPage = currentPage + 1">
-          Next
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Withdrawal Section -->
-  <div *ngIf="activeTab === 'withdrawal'" class="content">
-    <div class="withdrawal-form">
-      <h3>XRP Withdrawal</h3>
-      <p class="warning">⚠️ Please double-check all details before confirming</p>
-
-      <div class="field">
-        <label>XRP Address:</label>
-        <input
-          [(ngModel)]="withdrawalAddress"
-          placeholder="Enter XRP address"
-          class="full-width" />
-      </div>
-
-      <div class="field">
-        <label>Destination Tag:</label>
-        <input
-          [(ngModel)]="withdrawalTag"
-          placeholder="Enter destination tag"
-          type="number"
-          class="full-width" />
-      </div>
-
-      <div class="field">
-        <label>Amount (XRP):</label>
-        <input
-          [(ngModel)]="withdrawalAmount"
-          placeholder="Enter amount"
-          type="number"
-          class="full-width" />
-      </div>
-
-      <button
-        class="confirm-btn"
-        [disabled]="!isWithdrawalValid()"
-        (click)="confirmWithdrawal()">
-        Confirm Withdrawal
-      </button>
-    </div>
   </div>
 </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<app-fulldeposit-history-modal></app-fulldeposit-history-modal>
+<app-fullwithdrawal-history-modal></app-fullwithdrawal-history-modal>

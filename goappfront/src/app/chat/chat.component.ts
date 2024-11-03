@@ -1,4 +1,7 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {ChatService} from "../chat.service";
+import {Subscription} from "rxjs";
+import {BetService} from "../bet.service";
 
 
 interface ChatMessage {
@@ -13,7 +16,8 @@ interface ChatMessage {
   styleUrl: './chat.component.css'
 })
 
-export class ChatComponent {
+export class ChatComponent implements OnInit, OnDestroy{
+
   messages: ChatMessage[] = [
     { time: '13:46', username: 'User', text: 'Hello, my name is User, how are you guys?' },
     { time: '13:47', username: 'Alice', text: "Hi User! I'm doing great, thanks for asking. How about you?" },
@@ -41,17 +45,70 @@ export class ChatComponent {
     { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
     { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
     { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions." },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions.This has been a great chat! Looking forward to more discussions.This has been a great chat! Looking forward to more discussions.This has been a great chat! Lookin" },
+    { time: '14:00', username: 'User', text: "This has been a great chat! Looking forward to more discussions.This has been a great chat! Looking forward to more discussions.This has been a great chat! Looking forward to more discussions." },
   ];
 
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
-  ngAfterViewInit() {
-    this.scrollToBottom();
+
+  chatHeight: number = 40; // Default height in vh
+
+  private subscription: Subscription | undefined;  // Initialize as undefined
+
+
+  constructor(private chatService: ChatService, private betService: BetService) {}
+
+  ngOnInit() {
+    this.subscription = this.chatService.scrollToBottom$.subscribe(() => {
+      this.scrollToBottom();
+    });
   }
 
-  ngOnChanges() {
-    this.scrollToBottom();
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
+
 
   private scrollToBottom(): void {
     try {
@@ -61,4 +118,7 @@ export class ChatComponent {
     }
   }
 
+  openProfile(userID: string) {
+    this.betService.fetch_and_ProfileDetails(userID)
+  }
 }

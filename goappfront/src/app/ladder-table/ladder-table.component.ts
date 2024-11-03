@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
+import {BetService} from "../bet.service";
+
 @Component({
   selector: 'app-ladder-table',
   templateUrl: './ladder-table.component.html',
@@ -7,8 +9,11 @@ import { interval, Subscription } from 'rxjs';
 })
 
 
-
 export class LadderTableComponent implements OnInit, OnDestroy {
+
+
+  constructor(private betModalService: BetService, private betService: BetService) {}
+
   private timerSubscription: Subscription | undefined;
   ngOnInit() {
     this.updateCountdown();
@@ -47,5 +52,20 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     if (element) {
       element.style.setProperty('--value', value.toString());
     }
+  }
+
+  openBetDetails(d : string) {
+    this.betModalService.fetch_and_openBetDetails(d)
+  }
+
+
+
+
+  openWalletDialog() {
+
+  }
+
+  openProfile(userID: string) {
+    this.betService.fetch_and_ProfileDetails(userID)
   }
 }

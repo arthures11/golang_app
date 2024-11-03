@@ -1,0 +1,70 @@
+<dialog id="learn_more_daily_contest" class="modal">
+  <div class="modal-box max-w-4xl p-0 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <div class="p-6">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Daily Race Leaderboard</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">
+        Every day, players have a chance to receive a part of the reward pool, depending on their leaderboard placement.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Reward Distribution</h3>
+          <div class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Pool Share %</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let reward of rewardDistribution; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{reward}}%</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">How It Works</h3>
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">How are rewards calculated?</h4>
+              <p class="text-gray-600 dark:text-gray-400">
+                With every tap, 2% of your wager will be transferred to the reward pool. Every player increases the total pool with their taps.
+              </p>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">How to win?</h4>
+              <p class="text-gray-600 dark:text-gray-400">
+                The higher was your tap payout - the higher is your potential placement. For example:
+              </p>
+              <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 ml-4">
+                <li>Bob wagers 5 $TAPS and wins 3000 $TAPS, placing rank #1.</li>
+                <li>Alice wagers 1 $TAPS and wins 6666 $TAPS, which makes her claim #1 away from Bob.</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-800 dark:text-gray-200">Reward Distribution</h4>
+              <p class="text-gray-600 dark:text-gray-400">
+                Rewards are distributed every day at 2AM UTC, which immediately starts a new race.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-lg font-semibold text-gray-800 dark:text-gray-200">Enjoy and have fun!</p>
+      </div>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

@@ -1,11 +1,11 @@
 .styles {
-    pointer-events: none; 
-    user-select: none; 
+    pointer-events: none;
+    user-select: none;
 }
 
 #allow-interaction {
     pointer-events: auto;
-    user-select: text; 
+    user-select: text;
 }
 
 .info-icon {
@@ -22,4 +22,6 @@
     opacity: 0.1555;
   }
 
-  
+.input-container {
+  padding-top: 0.5rem;
+}

@@ -1,0 +1,23 @@
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.messages-container {
+  flex: 1;
+  min-height: 0; /* Important for Firefox */
+}
+
+.input-container {
+  padding-top: 0.5rem;
+}
+
+.messages-container span {
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Ensures long lines break within words as needed */
+}
+.messages-container .message {
+  max-width: 100%; /* Ensures message fits within container */
+}

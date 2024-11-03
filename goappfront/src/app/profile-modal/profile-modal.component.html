@@ -1,0 +1,340 @@
+<dialog id="myprofile_modal" class="modal">
+  <div class="modal-box max-w-4xl p-0 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+    <div *ngIf="isLoading">
+      <div class="p-6 flex justify-center items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
+      </div>
+    </div>
+    <div *ngIf="!isLoading">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+    <div class="p-6">
+      <div class="flex items-center space-x-4">
+        <img
+          [src]="profileImageUrl || 'assets/default-avatar.png'"
+          [alt]="profile.username"
+          class="w-20 h-20 rounded-full object-cover border-4 border-blue-500"
+        />
+        <div class="flex-1">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{profile.username}}</h2>
+
+
+          <div class="inline-flex items-center px-3 py-1 rounded-lg bg-gradient-to-r from-violet-500 to-purple-600 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div class="mr-2 w-2 h-2 rounded-full bg-violet-300 animate-pulse"></div>
+            <span class="text-xs font-bold text-violet-200 group-hover:text-white transition-colors duration-300">LEVEL</span>
+            <span class="ml-2 text-sm font-extrabold text-white">455</span>
+
+          </div>
+          <p class="absolute mt-3.5 mr-10 top-0 right-0 text-sm text-gray-500 dark:text-gray-400">Joined {{profile.joinDate}}</p>
+        </div>
+
+
+
+        <label
+          class="tip-button px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 cursor-pointer hover:badge-primary"
+          (click)="show('user=912398123912')"
+        >
+            <i class="fas fa-gift"></i>
+            <span>Tip</span>
+          </label>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="px-6">
+      <div class="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="p-6 space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">Tapped:</span>
+        <div class="flex items-center gap-3">
+          <label  class="badge badge-info gap-2 cursor-pointer hover:badge-primary"
+                  (click)="showTapHistory('user=912398123912')"
+          >
+            <i class="fas fa-history text-xs"></i>
+            show history
+          </label>
+          <span class="font-semibold text-gray-900 dark:text-white">
+            {{profile.stats.tapped | number}} times
+          </span>
+        </div>
+      </div>
+
+
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">Chat messages:</span>
+        <span class="font-semibold text-gray-900 dark:text-white">
+          {{profile.stats.chats | number}} chats
+        </span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">Wagered:</span>
+        <span class="font-semibold text-gray-900 dark:text-white">
+          {{profile.stats.wagered | number}} taps
+        </span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">ATH profit:</span>
+        <span class="font-semibold text-green-500">
+          {{profile.stats.athProfit | number}} taps
+        </span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">ATL profit:</span>
+        <span class="font-semibold text-red-500">
+          {{profile.stats.atlProfit | number}} taps
+        </span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600 dark:text-gray-400">Competitive total winnings:</span>
+        <span class="font-semibold text-green-500">
+          {{profile.stats.athProfit | number}} taps
+        </span>
+      </div>
+      <div class="flex justify-between items-center pt-2 border-t">
+        <span class="text-gray-600 dark:text-gray-400 font-medium">Net profit</span>
+        <span class="font-bold" [ngClass]="profile.stats.netProfit >= 0 ? 'text-green-500' : 'text-red-500'">
+          {{profile.stats.netProfit | number}} taps
+        </span>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+<!-- Separate History Modal -->
+
+<dialog id="history_modal" class="modal">
+  <div class="modal-box max-w-5xl p-0 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+    <div *ngIf="isLoading">
+      <div class="p-6 flex justify-center items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
+      </div>
+    </div>
+    <!-- Header -->
+    <div *ngIf="!isLoading">
+    <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white">Tapping history</h3>
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+    </div>
+
+    <!-- Table Container -->
+    <div class="p-4">
+      <div class="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">ID</th>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">Time</th>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">Bet Amount</th>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">Multiplier</th>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">Profit</th>
+              <th class="px-4 py-3 text-gray-600 dark:text-gray-400">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Win Example -->
+            <tr class="border-b dark:border-gray-700 bg-green-50/50 dark:bg-green-900/20 hover:bg-green-100/50 dark:hover:bg-green-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123456</td>
+              <td class="px-4 py-3">{{betHistory[0].id}}</td>
+              <td class="px-4 py-3">100</td>
+              <td class="px-4 py-3">2.5x</td>
+              <td class="px-4 py-3 text-green-600 dark:text-green-400 font-medium">+150</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400">
+                    WIN
+                  </span>
+              </td>
+            </tr>
+            <!-- Loss Example -->
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            <tr class="border-b dark:border-gray-700 bg-red-50/50 dark:bg-red-900/20 hover:bg-red-100/50 dark:hover:bg-red-900/30">
+              <td class="px-4 py-3 font-mono text-sm">#123455</td>
+              <td class="px-4 py-3">2024-03-15 14:29</td>
+              <td class="px-4 py-3">200</td>
+              <td class="px-4 py-3">0x</td>
+              <td class="px-4 py-3 text-red-600 dark:text-red-400 font-medium">-200</td>
+              <td class="px-4 py-3">
+                  <span class="px-2 py-1 text-xs rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+                    LOSS
+                  </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-gray-50 dark:bg-gray-800 px-4 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-700 dark:text-gray-300">
+              Showing <span class="font-medium">1-10</span> of <span class="font-medium">50</span>
+            </span>
+            <select class="select">
+              <option>10 per page</option>
+              <option>25 per page</option>
+              <option>50 per page</option>
+            </select>
+          </div>
+          <div class="join">
+            <button class="join-item btn btn-sm">«</button>
+            <button class="join-item btn btn-sm btn-active">1</button>
+            <button class="join-item btn btn-sm">2</button>
+            <button class="join-item btn btn-sm">3</button>
+            <button class="join-item btn btn-sm">»</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<app-tip-modal></app-tip-modal>

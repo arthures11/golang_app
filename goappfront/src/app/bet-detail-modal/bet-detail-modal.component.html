@@ -1,0 +1,98 @@
+
+
+<dialog *ngIf="bet" id="bet_details_modal" class="modal">
+  <div class="modal-box max-w-2xl p-0 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+    <div *ngIf="isLoading">
+      <div class="p-6 flex justify-center items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
+      </div>
+    </div>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+
+    <div *ngIf="!isLoading">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="text-xl font-bold text-gray-900 dark:text-white">Bet ID: #{{bet.id}}</span>
+          <svg *ngIf="bet.verified" class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+          </svg>
+        </div>
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          {{bet.date | date:'medium'}}
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <span class="text-gray-600 dark:text-gray-400">by </span>
+        <span class="font-semibold text-gray-900 dark:text-white">{{bet.username}}</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="px-6">
+      <div class="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+    </div>
+
+    <!-- Bet Details -->
+    <div class="p-6 space-y-4">
+      <!-- Result Section -->
+      <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+        <span class="text-lg font-medium text-gray-600 dark:text-gray-300">Result</span>
+        <span class="text-lg font-bold" [ngClass]="bet.status === 'WIN' ? 'text-green-500' : 'text-red-500'">
+          {{bet.result}}
+        </span>
+      </div>
+
+      <!-- Financial Details -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <span class="text-gray-600 dark:text-gray-400">Bet Amount:</span>
+          <span class="font-semibold text-gray-900 dark:text-white">
+            {{bet.betAmount | number}} taps
+          </span>
+        </div>
+
+        <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <span class="text-gray-600 dark:text-gray-400">Win Amount:</span>
+          <span class="font-semibold text-gray-900 dark:text-white">
+            {{bet.winAmount | number}} taps
+          </span>
+        </div>
+
+        <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <span class="text-gray-600 dark:text-gray-400">Payout:</span>
+          <span class="font-semibold text-gray-900 dark:text-white">
+            {{bet.payout}}x
+          </span>
+        </div>
+
+        <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <span class="text-gray-600 dark:text-gray-400">Profit:</span>
+          <span class="font-bold" [ngClass]="bet.profitAmount >= 0 ? 'text-green-500' : 'text-red-500'">
+            {{bet.profitAmount | number}} taps
+          </span>
+        </div>
+      </div>
+
+      <!-- Status Banner -->
+      <div class="mt-6">
+        <div class="flex justify-center items-center p-3 rounded-lg"
+             [ngClass]="bet.status === 'WIN' ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'">
+          <span class="text-xl font-bold"
+                [ngClass]="bet.status === 'WIN' ? 'text-green-700 dark:text-green-100' : 'text-red-700 dark:text-red-100'">
+            {{bet.status}} {{bet.status === 'WIN' ? '🤑' : '👨‍🦽'}}
+          </span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+
+</dialog>

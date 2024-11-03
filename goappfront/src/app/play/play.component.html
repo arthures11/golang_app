@@ -1,36 +1,50 @@
-
-
-<app-header-user-panel></app-header-user-panel>
+<div class="flex h-screen flex-wrap">
+<app-header-user-panel class="w-full"></app-header-user-panel>
 <!-- <app-sidenav></app-sidenav> -->
+<div class="flex h-full w-1/2 flex-col" style="height: calc(100% - var(--header-height))">
+    <!-- Ladder Table Container -->
+    <div class="w-full h-1/2 card bg-base-300 rounded-box">
+      <app-ladder-table class="relative h-full w-full overflow-auto"></app-ladder-table>
+      <app-ladder-table-info></app-ladder-table-info>
+    </div>
 
-<div class="flex w-full flex-col lg:flex-row">
+    <!-- Vertical Divider -->
+    <div class="divider h-1/7"
+         appResizable
+         orientation="vertical"
+         [minSize]="110"
+         [maxSize]="1900">
+    </div>
 
-    <div class="flex w-auto flex-col">
-        <div class="card bg-base-300 rounded-box grid h-auto place-items-center">
-            <app-ladder-table></app-ladder-table>
-        </div>
-        <div class="divider "></div>
-        <div class="card bg-base-300 rounded-box grid h-auto">
-            <app-chat></app-chat>
-        </div>
-      </div>
+    <!-- Chat Container -->
+    <div class="w-full h-1/3 card bg-base-300 rounded-box">
+      <app-chat class ="overflow-auto"></app-chat>
+    </div>
+</div>
+  <div class="divider lg:divider-horizontal" appResizable orientation="horizontal"
+       [minSize]="600" [maxSize]="1350"></div>
+  <div class="h-full"style="height: calc(100% - var(--header-height))">
+  <div class="card bg-base-300 rounded-box flex flex-col h-full flex-grow items-center relative ">
+    <span class="absolute right-7 top-7 flex h-3 w-3 tooltip " data-tip="55 ms">
+  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+  <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+    </span>
 
-
-
-  <div class="divider lg:divider-horizontal">
-
-  </div>
-  <div class="card bg-base-300 rounded-box grid h-auto flex-grow place-items-center">
-
-    <app-coin class="mt-16"></app-coin>
-    <app-bet-settings class="place-items-center"></app-bet-settings>
+    <app-coin class="mt-20"></app-coin>
+    <app-bet-settings class="mt-20"></app-bet-settings>
 
   </div>
 </div>
+
+
+
+
+
 <app-user-settings-modal></app-user-settings-modal>
+<app-profile-modal></app-profile-modal>
 
+<app-notification-container></app-notification-container>
 
+<app-learn-more-daily-contest-modal></app-learn-more-daily-contest-modal>
 
-
-
-
+</div>
